@@ -10,11 +10,12 @@ public:
 	~Texture();
 	
 	SDL_Point GetSize() const { return _size; }
-	
+	SDL_Color GetColor(SDL_Point pixel);
 	void Render();
 	
 	void SetPixel(SDL_Point pixel, SDL_Color color);
 	void UpdateTexture();
+	void UpdateTexture(int delay);
 
 private:
     SDL_Renderer* _renderer;
@@ -22,3 +23,4 @@ private:
 	SDL_Point _size;
 	std::vector<Uint32> _pixels;
 };
+

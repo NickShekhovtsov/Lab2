@@ -26,6 +26,21 @@ Texture::~Texture()
     SDL_DestroyTexture(_sdlTexture);
 }
 
+SDL_Color RgbaFromUint32(Uint32 pixel)
+{
+	SDL_Color color;
+	color.r = static_cast<uint8_t>(pixel >> 24);
+	color.g = static_cast<uint8_t>(pixel >> 16);
+	color.b = static_cast<uint8_t>(pixel >> 8);
+	color.a = static_cast<uint8_t>(pixel);
+	return color;
+}
+
+SDL_Color Texture::GetColor(SDL_Point pixel)
+{
+	return RgbaFromUint32(_pixels.at(pixel.x + pixel.y * _size.x));
+}
+
 void Texture::Render()
 {
 	SDL_RenderCopy(_renderer, _sdlTexture, nullptr, nullptr);
@@ -38,8 +53,24 @@ void Texture::SetPixel(SDL_Point pixel, SDL_Color color)
 
 void Texture::UpdateTexture()
 {
+	
 	SDL_UpdateTexture(_sdlTexture,
 		nullptr,
 		_pixels.data(),
 		_size.x * sizeof(_pixels[0]));
+}
+
+void Texture::UpdateTexture(int delay)
+{
+	std::vector<Uint32> _pixels_del;
+	for (int i = 0; i < _pixels.size(); i++)
+	{
+		_pixels_del.push_back(_pixels[i]);
+		
+			SDL_UpdateTexture(_sdlTexture,
+				nullptr,
+				_pixels_del.data(),
+				_size.x * sizeof(_pixels[0]));
+		
+	}
 }
